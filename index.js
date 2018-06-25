@@ -5,8 +5,8 @@
  */
 function autoBind(self, options) {
     options = Object.assign({}, options);
-	const filter = key => {
-		const match = pattern => typeof pattern === 'string' ? key === pattern : pattern.test(key);
+	function filter(key) {
+		function match(pattern) { return typeof pattern === 'string' ? key === pattern : pattern.test(key) };
 		if (options.include) {
 			return options.include.some(match);
 		}
@@ -15,12 +15,12 @@ function autoBind(self, options) {
 		}
 		return true;
 	};
-	for (const key of Object.getOwnPropertyNames(self.constructor.prototype)) {
+	Object.getOwnPropertyNames(self.constructor.prototype).forEach(function(key) {
 		const val = self[key];
 		if (key !== 'constructor' && typeof val === 'function' && filter(key)) {
 			self[key] = val.bind(self);
 		}
-	}
+	});
 	return self;
 }
 
@@ -54,6 +54,5 @@ function autoBindReact(self, options) {
 }
 
 
-module.exports = {
-	autoBind, autoBindReact
-}
+module.exports.autoBind = autoBind;
+module.exports.autoBindReact = autoBindReact;
