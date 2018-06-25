@@ -1,31 +1,28 @@
-'use strict';
-module.exports = (self, options) => {
-	options = Object.assign({}, options);
-
+/**
+ * Auto bind methods in es6 classes
+ * @param {*} self 
+ * @param {*} options 
+ */
+export function autoBind(self, options) {
+    options = Object.assign({}, options);
 	const filter = key => {
 		const match = pattern => typeof pattern === 'string' ? key === pattern : pattern.test(key);
-
 		if (options.include) {
 			return options.include.some(match);
 		}
-
 		if (options.exclude) {
 			return !options.exclude.some(match);
 		}
-
 		return true;
 	};
-
 	for (const key of Object.getOwnPropertyNames(self.constructor.prototype)) {
-		const value = self[key];
-
-		if (key !== 'constructor' && typeof value === 'function' && filter(key)) {
-			self[key] = value.bind(self);
+		const val = self[key];
+		if (key !== 'constructor' && typeof val === 'function' && filter(key)) {
+			self[key] = val.bind(self);
 		}
 	}
-
 	return self;
-};
+}
 
 const excludedReactMethods = [
 	'componentWillMount',
@@ -45,8 +42,13 @@ const excludedReactMethods = [
 	'forceUpdate'
 ];
 
-module.exports.react = (self, options) => {
+/**
+ * Auto bind methods in react classes
+ * @param {*} self 
+ * @param {*} options 
+ */
+export function autoBindReact(self, options) {
 	options = Object.assign({}, options);
 	options.exclude = (options.exclude || []).concat(excludedReactMethods);
-	return module.exports(self, options);
-};
+	return autoBind(self, options);
+}
