@@ -3,7 +3,7 @@
  * @param {*} self 
  * @param {*} options 
  */
-export function autoBind(self, options) {
+function autoBind(self, options) {
     options = Object.assign({}, options);
 	const filter = key => {
 		const match = pattern => typeof pattern === 'string' ? key === pattern : pattern.test(key);
@@ -47,8 +47,13 @@ const excludedReactMethods = [
  * @param {*} self 
  * @param {*} options 
  */
-export function autoBindReact(self, options) {
+function autoBindReact(self, options) {
 	options = Object.assign({}, options);
 	options.exclude = (options.exclude || []).concat(excludedReactMethods);
 	return autoBind(self, options);
+}
+
+
+module.exports = {
+	autoBind, autoBindReact
 }
