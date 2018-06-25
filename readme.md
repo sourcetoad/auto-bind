@@ -6,14 +6,14 @@
 ## Install
 
 ```
-$ npm install auto-bind
+$ npm install --save git+https://github.com/sourcetoad/auto-bind.git
 ```
 
 
 ## Usage
 
 ```js
-const autoBind = require('auto-bind');
+import { autoBind, autoBindReact } from 'auto-bind';
 
 class Unicorn {
 	constructor(name) {
@@ -69,7 +69,7 @@ Type: `Array<string|RegExp>`
 
 Bind methods except for the given methods.
 
-### autoBind.react(self, [options])
+### autoBindReact(self, [options])
 
 Same as `autoBind`, but excludes the default [React component methods](https://reactjs.org/docs/react-component.html).
 
@@ -77,7 +77,7 @@ Same as `autoBind`, but excludes the default [React component methods](https://r
 class Foo extends React.Component {
 	constructor(props) {
 		super(props);
-		autoBind.react(this);
+		autoBindReact(this);
 	}
 
 	// …
